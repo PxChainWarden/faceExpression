@@ -1,25 +1,61 @@
-import cv2
+import cv2 as cv
+import numpy as np
+import time
 
-cv2.namedWindow("testing")
-vc = cv2.VideoCapture(0)
+face_path = 'cascades/haarcascade_frontalface_default.xml'
+face_detector = cv.CascadeClassifier(face_path)
+eye_path = 'cascades/haarcascade_eye.xml'
+eye_detector = cv.CascadeClassifier(eye_path)
+
+def detectFace():
+    rects = face_detector.detectMultiScale(gray, 
+        scaleFactor=1.1,
+        minNeighbors=5, 
+        minSize=(30, 30), 
+        flags=cv.CASCADE_SCALE_IMAGE)
+
+    color = (255,0,0)
+    for rect in rects:
+        cv.rectangle(frame, rect, color, 2)
+
+def detectEye():
+    rects = eye_detector.detectMultiScale(gray, 
+        scaleFactor=1.1,
+        minNeighbors=5, 
+        minSize=(30, 30), 
+        flags=cv.CASCADE_SCALE_IMAGE)
+
+    color = (0,0,255)
+    for rect in rects:
+        cv.rectangle(frame, rect, color, 2)
 
 
-if vc.isOpened(): # try to get the first frame
-    rval, frame = vc.read()
-else:
-    rval = False
+cap = cv.VideoCapture(0)
+t0 = time.time()
 
-while rval:
-    cv2.imshow("testing", frame)
-    rval, frame = vc.read()
-    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    key = cv2.waitKey(20)
-    if key == 27 or vc.isClosed(): # exit on ESC
+M = np.float32([[0.5, 0, 0], [0, 0.5, 0]])
+size = (640, 360)
+
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    gray_s = cv.warpAffine(gray, M, size)
+
+    #frame_s = cv.warpAffine(frame, M, size)
+
+    detectFace()
+    detectEye()
+    cv.imshow('window', frame)
+    t = time.time()
+    cv.displayOverlay('window', f'time={t-t0:.3f}')
+    t0 = t
+
+    if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
-vc.release()
-cv2.destroyWindow("preview")
-
+cap.release()
+cv.destroyAllWindows()
 
 emotions = ['Neutral', 'Happy', 'Surprise', 'Sad', 'Anger', 'Disgust', 'Fear', 'Contempt']
