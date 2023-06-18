@@ -1,23 +1,16 @@
-Projedeki gerekli kütüphaneleri hızlıca yüklemek için pipenv kullanmanızı tavsiye ederiz.
+Projedeki gerekli kütüphaneleri hızlıca yüklemek için python virualenv kullanmanızı tavsiye ederiz.
 
-debian tabanlı distrolar için:
-`apt install pipenv`
+Linux için:
+`pip install virtualenv`
 
-arch tabanlı distrolar için:
-`pacman -S pipenv`
+Proje dizininde yeni bir virtual environment oluşturun:
+`python -m venv venv`
 
+Bu virtual environment'ı aktif edin:
+`source venv/bin/activate`
 
-Projede kullanılan tüm kütüphaneler requirements.txt içerisine kopyalanmıştır.
-
-Eğer cuda 11 kullanan bir gpu kullanıyorsanız direkt olarak:
-
-`pipenv install`
-
-şeklinde gerekli paketleri yükleyebilirsiniz.
-
-Eğer cuda 10 kullanan ekran kartı kullanıyorsanız aşağıdaki şekilde yüklemeyi gerçekleştirebilirsiniz.
-
-`pipenv install -r requirements_cuda10.txt`
+Aşağıdaki şekilde gerekli kütüphaneleri yüklemeyi gerçekleştirin:
+`pip install -r requirements.txt`
 
 Eğitimi başlatmak için:
 
